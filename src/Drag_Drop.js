@@ -1,12 +1,13 @@
 'use strict';
 
 /**
- * draggable entity, represented as a square object
+ * draggable entity, currentl represented as a square object
  */
 class Draggable
 {
+  // TODO: pass co-ords by reference so functions can control an object rather than having to render the object speratly
   // taking in sizing parameters as well as a dropzone entity to check that it's placement is valid
-  constructor(x,y,width, height, dropzone, pickup)
+  constructor(x,y,width, height, dropzone, sounds)
   {
     this.that = this;
     this.x = x;
@@ -24,7 +25,7 @@ class Draggable
     this.color = 'green';
     this.dropzone = dropzone; // reference to the dropzone entity
     
-    this.soundManager = pickup;
+    this.soundManager = sounds;
 
     this.inflight = {}; // used to get rid of object "jumping" to mouse co-ords
 
@@ -46,55 +47,56 @@ class Draggable
     if(utilities.pointBoxCollision(this.boundingBox(), {x: e.clientX, y: e.clientY})){
       document.addEventListener("mousemove", this.mouseMoveHandler, true);
       document.addEventListener("mouseup", this.mouseUpHandler, true);
+      this.scaleDown(true);
+      
       this.inflight.x = e.clientX - this.x;
       this.inflight.y = e.clientY - this.y;
-      this.lerpTo = true;
       
       this.soundManager.playSound("pickup", false);
     }
   }
   
   // update the entity's location each mouse move
-  onMouseMove(e)
-  {
+  onMouseMove(e){
     this.x = e.clientX - this.inflight.x;
     this.y = e.clientY - this.inflight.y;
   }
 
   // when the mouse button is released perform checks to ensure placement is valid and then remove the listeners
-  onMouseUp(e)
-  {
+  onMouseUp(e){
     if(utilities.boundingBoxCollision(this.boundingBox(), this.dropzone.boundingBox())){
       this.dropzone.validDrop(true);
+      this.scaleDown(false);
       this.x = this.dropzone.x + ((this.dropzone.width - this.width) / 2);
       this.y = this.dropzone.y + ((this.dropzone.height - this.height) / 2);
-
       this.soundManager.playSound("confirm", false);
     } else {
       this.dropzone.validDrop(false);
+      this.scaleDown(false);
       this.x = this.origin.x;
       this.y = this.origin.y;
 
       this.soundManager.playSound("error", false);
     }
+
+    
     
     document.removeEventListener("mousemove",this.mouseMoveHandler, true);
     document.removeEventListener("mouseup", this.mouseUpHandler, true);
   }
 
-  reSize()
-  {
-    
+  scaleDown(scale){
+    if(scale){
+      this.width = utilities.lerp(this.baseW, this.scaleW, .5);
+      this.height = utilities.lerp(this.baseH, this.scaleH, .5);
+    } else {
+      this.width = utilities.lerp(this.scaleW, this.baseW, 1);
+      this.height = utilities.lerp(this.scaleH, this.baseH, 1);
+    }
   }
 
-  draw(ctx)
-  {
+  draw(ctx){
     if(this.lerpTo){
-      this.width = utilities.lerp(this.baseW, this.scaleW, .9);
-      this.height = utilities.lerp(this.baseH, this.scaleH, .9);
-      if(this.width == this.scaleW && this.height == scaleH){
-        this.lerpTo = false;
-      }
     }
     ctx.beginPath();
     ctx.fillStyle = this.color;
@@ -106,10 +108,8 @@ class Draggable
 /**
  * basic square entity to represent a dropzone
  */
-class DropZone
-{
-  constructor(x,y,width,height)
-  {
+class DropZone {
+  constructor(x,y,width,height) {
     this.x = x;
     this.y = y;    
     this.width = width;
@@ -119,25 +119,19 @@ class DropZone
   }
 
   // validation flip
-  validDrop(bool)
-  {
-    if(bool)
-    {
+  validDrop(bool) {
+    if(bool) {
       this.colour = 'blue';
-    }
-    else
-    {
+    } else {
       this.colour = 'red';
     }
   }
 
-  boundingBox()
-  {
+  boundingBox() {
     return {x:this.x, y:this.y, width:this.width, height:this.height};
   }
 
-  draw(ctx)
-  {
+  draw(ctx) {
     ctx.beginPath();
     ctx.fillStyle = this.colour;
     ctx.fillRect(this.x, this.y, this.width, this.height);

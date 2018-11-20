@@ -34,6 +34,9 @@ class Main
         this.audioManager.loadSound(name, sounds[name]);
     }
 
+    this.squareA = new Square(400,500,75,75, 'green');
+    this.squareB = new Square(200, 400,50,50, 'green')
+
     // component entities
     this.dropzone = new DropZone(400,500,75,75);
     this.draggable = new Draggable(200,400,50, 50, this.dropzone, this.audioManager);
