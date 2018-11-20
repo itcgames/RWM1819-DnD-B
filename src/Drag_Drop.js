@@ -14,6 +14,13 @@ class Draggable
     this.origin = {x: x, y: y}; // origin point to return to
     this.width = width;
     this.height = height;
+
+    this.baseW = width;
+    this.baseH = height;
+    this.scaleW = width / 2;
+    this.scaleH = height / 2;
+    this.lerpTo = false;
+
     this.color = 'green';
     this.dropzone = dropzone; // reference to the dropzone entity
     
@@ -36,12 +43,12 @@ class Draggable
     this.mouseUpHandler = this.onMouseUp.bind(this);
 
     // pointBoxCollision takes a box{x,y,width, height} and a point{x,y}
-    if(utilities.pointBoxCollision(this.boundingBox(), {x: e.clientX, y: e.clientY}))
-    {
+    if(utilities.pointBoxCollision(this.boundingBox(), {x: e.clientX, y: e.clientY})){
       document.addEventListener("mousemove", this.mouseMoveHandler, true);
       document.addEventListener("mouseup", this.mouseUpHandler, true);
       this.inflight.x = e.clientX - this.x;
       this.inflight.y = e.clientY - this.y;
+      this.lerpTo = true;
       
       this.soundManager.playSound("pickup", false);
     }
@@ -57,14 +64,13 @@ class Draggable
   // when the mouse button is released perform checks to ensure placement is valid and then remove the listeners
   onMouseUp(e)
   {
-    if(utilities.boundingBoxCollision(this.boundingBox(), this.dropzone.boundingBox()))
-    {
+    if(utilities.boundingBoxCollision(this.boundingBox(), this.dropzone.boundingBox())){
       this.dropzone.validDrop(true);
       this.x = this.dropzone.x + ((this.dropzone.width - this.width) / 2);
       this.y = this.dropzone.y + ((this.dropzone.height - this.height) / 2);
-    }
-    else
-    {
+
+      this.soundManager.playSound("confirm", false);
+    } else {
       this.dropzone.validDrop(false);
       this.x = this.origin.x;
       this.y = this.origin.y;
@@ -76,8 +82,20 @@ class Draggable
     document.removeEventListener("mouseup", this.mouseUpHandler, true);
   }
 
+  reSize()
+  {
+    
+  }
+
   draw(ctx)
   {
+    if(this.lerpTo){
+      this.width = utilities.lerp(this.baseW, this.scaleW, .9);
+      this.height = utilities.lerp(this.baseH, this.scaleH, .9);
+      if(this.width == this.scaleW && this.height == scaleH){
+        this.lerpTo = false;
+      }
+    }
     ctx.beginPath();
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.width, this.height);

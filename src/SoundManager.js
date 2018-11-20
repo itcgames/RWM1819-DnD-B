@@ -72,7 +72,7 @@ class SoundManager
     {
         if(this.audioBuffers[sound] == undefined)
         {
-            console.log("Sound " + name + " does not exist or has not been loaded.");
+            console.log("Sound " + sound + " does not exist or has not been loaded.");
             return;
         }
 
@@ -83,7 +83,7 @@ class SoundManager
 
         /**this.source.connect(this.gainNode);
         this.gainNode.connect(this.audioContext.destination); */
-        
+        console.log("Sound " + sound + " playing.");
 
         this.source.buffer = audio; // tell the source which sound to play
         this.source.loop = loop;

@@ -24,11 +24,14 @@ class Main
     this.audioManager = new SoundManager();
     this.audioManager.initialize();
 
-    var sounds = {'pickup': 'resources/sound/pickup.wav', 'error' : 'resources/sound/error.wav'};
+    var sounds = {
+      'pickup': 'resources/sound/pickup.wav', 
+      'error' : 'resources/sound/error.wav',
+      'confirm':'resources/sound/confirmation.wav'};
 
     for(name in sounds)
     {
-        this.loadSound(name, sounds[name]);
+        this.audioManager.loadSound(name, sounds[name]);
     }
 
     // component entities
