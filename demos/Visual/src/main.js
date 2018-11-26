@@ -21,21 +21,8 @@ class Main
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
 
-    this.audioManager = new SoundManager();
-    this.audioManager.initialize();
-
-    var sounds = {
-      'pickup': 'resources/sound/pickup.wav', 
-      'error' : 'resources/sound/error.wav',
-      'confirm':'resources/sound/confirmation.wav'};
-
-    for(name in sounds)
-    {
-        this.audioManager.loadSound(name, sounds[name]);
-    }
-
-    this.drag = new Square(200,400,50,50, 'red', this.audioManager, "drag");
-    this.drop = new Square(400,500,75,75, 'green', this.audioManager, "drop");
+    this.drag = new Square(200,400,50,50, 'red', "drag");
+    this.drop = new Square(400,500,75,75, 'green', "drop");
 
     var array = [];
     array.push(this.drop);

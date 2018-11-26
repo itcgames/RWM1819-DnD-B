@@ -1,11 +1,11 @@
 class Square{
-    constructor(x, y, width, height, colour, sounds, createZones){
+    constructor(x, y, width, height, colour, createZones){
         this.draggable = {};
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.soundManager = sounds;
+        this.colour = colour;
 
         switch(createZones)
         {
@@ -19,19 +19,6 @@ class Square{
             this.draggable = {};
             break;
         }
-
-        this.hoverOn = 'blue';
-        this.hoverOff = colour;
-    }
-
-    hoverStart()
-    {
-        this.colour = this.hoverOn;
-    }
-
-    hoverEnd()
-    {
-        this.colour = this.hoverOff;
     }
 
     getCollider()

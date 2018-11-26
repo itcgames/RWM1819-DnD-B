@@ -56,10 +56,6 @@ class Draggable
       
       this.inflight.x = e.clientX - this.entity.x;
       this.inflight.y = e.clientY - this.entity.y; 
-      
-      if(this.entity.soundManager != undefined) { 
-       this.entity.soundManager.playSound("pickup", false);
-      }
     }
   }
   
@@ -84,19 +80,12 @@ class Draggable
           this.entity.y = dropzone.y + ((dropzone.height - this.entity.height) / 2);
 
           this.dropzones[i].draggable.validDrop(true);
-
-          if(this.soundManager !== undefined){
-            this.entity.soundManager.playSound("confirm", false);
-          }
         } else {
           this.entity.x = this.origin.x;
           this.entity.y = this.origin.y;
 
           this.dropzones[i].draggable.validDrop(false);
           
-          if(this.entity.soundManager !== undefined){
-            this.entity.soundManager.playSound("error", false);
-          }
         }
       }
     }
