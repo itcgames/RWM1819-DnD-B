@@ -2,12 +2,13 @@
 
 var that = {};
 /**
- * draggable entity, currentl represented as a square object
+ * draggable entity
  */
 class Draggable
 {
-  // TODO: pass co-ords by reference so functions can control an object rather than having to render the object speratly
-  // taking in sizing parameters as well as a dropzone entity to check that it's placement is valid
+  // constructor - takes in a reference to an entity to allow for flexibility
+  // colliders are created by the entities that the user passes
+  // collision checks between draggable entities are performed within the drag component however
   constructor(entity)
   {
     that = this;
@@ -23,11 +24,13 @@ class Draggable
     document.addEventListener("mousemove", this.mouseOverHandler, true);
   }
 
+  // add to the list of dropzones - this is passed as a list of ENTITIES currently and not dropzone objects that can be below this class
   addDropZones(dropzone)
   {
     this.dropzones = dropzone;
   }
 
+  // Hover over affordance - check to see if the mouse goes within the collider of the entity, if so call the entities Hover over function
   onMouseOver(e)
   {
     if(!this.dragging){
@@ -42,6 +45,7 @@ class Draggable
   }
 
   // detect a mouse button press event and check to see if it is within the points of the entity
+  // if it is add a seperate mousemove event to the draggable which updates the entity in flight
   onMouseDown(e)
   {
     e.preventDefault();
@@ -71,6 +75,7 @@ class Draggable
   }
 
   // when the mouse button is released perform checks to ensure placement is valid and then remove the listeners
+  // iterate through the list of dropzones if draggable has any stored, if not just drop the draggable where it is
   onMouseUp(e){
     e.preventDefault();
     this.dragging = false;
@@ -107,7 +112,7 @@ class Draggable
 }
 
 /**
- * basic entity to represent a dropzone
+ * basic entity to represent a dropzone acts as a reference
  */
 class DropZone {
   constructor(object) {
