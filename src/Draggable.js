@@ -12,7 +12,7 @@ class Draggable
     that = this;
     this.range = {};
     this.entity = entity;  // reference to the entity
-    this.origin = {x: entity.x, y: entity.y}; // starting point of the entity
+    this.origin = {x: entity.getCollider().x, y: entity.getCollider().y};
 
     this.dragging = false;
     this.axisLock = false;
@@ -60,8 +60,8 @@ class Draggable
       document.addEventListener("mousemove", this.mouseMoveHandler, true);
       document.addEventListener("mouseup", this.mouseUpHandler, true);
       
-      this.inflight.x = e.clientX - this.entity.x;
-      this.inflight.y = e.clientY - this.entity.y; 
+      this.inflight.x = e.clientX - this.entity.getCollider().x;
+      this.inflight.y = e.clientY - this.entity.getCollider().y; 
       
       if(this.entity.soundManager != undefined) { 
        this.entity.soundManager.playSound("pickup", false);
@@ -74,31 +74,34 @@ class Draggable
     e.preventDefault();
     if(this.axisLock){
       if(this.axis === "horizontal"){
-        this.entity.x = e.clientX - this.inflight.x;
+        this.entity.updatePosition(e.clientX - this.inflight.x, this.entity.getCollider().y);
       } else if (this.axis === "vertical"){
-        this.entity.y = e.clientY - this.inflight.y;
+        this.entity.updatePosition(this.entity.getCollider().x, e.clientY - this.inflight.y);
       }
-      else{}
 
       if(this.range != undefined)
       {
-        if(this.entity.x < this.range.minX){
-          this.entity.x = this.range.minX;
+        var collider = this.entity.getCollider();
+        var x;
+        var y;
+
+        if(collider.x < this.range.minX){
+          x = this.range.minX;
         }
-        if(this.entity.y < this.range.minY){
-          this.entity.y = this.range.minY;
+        if(collider.y < this.range.minY){
+          y = this.range.minY;
         }
-        if(this.entity.x > this.range.maxX){
-          this.entity.x = this.range.maxX;
+        if(collider.x > this.range.maxX){
+          x = this.range.maxX;
         }
-        if(this.entity.y > this.range.maxY){
-          this.entity.y = this.range.maxY;
+        if(collider.y > this.range.maxY){
+          y = this.range.maxY;
         }
+        this.entity.updatePosition(x, y);
       }
     }
     else{
-      this.entity.x = e.clientX - this.inflight.x;
-      this.entity.y = e.clientY - this.inflight.y;
+      this.entity.updatePosition(e.clientX - this.inflight.x, e.clientY - this.inflight.y);
     }
   }
 
@@ -106,7 +109,6 @@ class Draggable
   onMouseUp(e){
     e.preventDefault();
     this.dragging = false;
-    
     document.removeEventListener("mousemove",this.mouseMoveHandler, true);
     document.removeEventListener("mouseup", this.mouseUpHandler, true);
   }
