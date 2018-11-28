@@ -41,6 +41,11 @@ class Square{
         return {x: this.x, y: this.y, width: this.width, height:this.height};
     }
 
+    updatePosition(x,y){
+        this.x = x;
+        this.y = y;
+    }
+
     draw(ctx){
         ctx.beginPath();
         ctx.fillStyle = this.colour;

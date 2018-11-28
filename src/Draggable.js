@@ -82,8 +82,8 @@ class Draggable
       if(this.range != undefined)
       {
         var collider = this.entity.getCollider();
-        var x;
-        var y;
+        var x = collider.x;
+        var y = collider.y;
 
         if(collider.x < this.range.minX){
           x = this.range.minX;
