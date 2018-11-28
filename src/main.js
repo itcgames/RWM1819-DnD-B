@@ -35,6 +35,7 @@ class Main
     }
 
     this.drag = new Square(200,400,50,50, 'red', this.audioManager, "drag");
+<<<<<<< HEAD
     this.drop = new Square(400,500,75,75, 'green', this.audioManager, "drag");
 
     this.drag.draggable.setAxisLock("horizontal", {minX: 200, minY: 400, maxX: 300, maxY: 400});
@@ -46,6 +47,16 @@ class Main
       this.drag.draggable.addDropZones(array);
     }
  */
+=======
+    this.drop = new Square(400,500,75,75, 'green', this.audioManager, "drop");
+
+    var array = [];
+    array.push(this.drop);
+    if(this.drag.draggable != undefined){
+      this.drag.draggable.addDropZones(array);
+    }
+
+>>>>>>> aba063dc9fa340c57ceee4607ff49861790e20c1
   }
 
   update()
