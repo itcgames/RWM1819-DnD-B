@@ -72,7 +72,7 @@ class SoundManager
     {
         if(this.audioBuffers[sound] == undefined)
         {
-            console.log("Sound " + sound + " does not exist or has not been loaded.");
+            //console.log("Sound " + sound + " does not exist or has not been loaded.");
             return;
         }
 

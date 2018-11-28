@@ -34,11 +34,15 @@ class Main
         this.audioManager.loadSound(name, sounds[name]);
     }
 
-    this.drag = new Square(200,400,50,50, 'red', this.audioManager, "drag");
-    this.drop = new Square(400,500,75,75, 'green', this.audioManager, "drag");
+    this.dragManager = new DragDropManager();
 
-    this.drag.draggable.setAxisLock("horizontal", {minX: 200, minY: 400, maxX: 300, maxY: 400});
-    this.drop.draggable.setAxisLock("vertical", {minX: 400, minY: 300, maxX: 400, maxY: 600});
+    this.drag1 = new Square(200,400,50,50, 'red', this.audioManager, "drag");
+    this.drag2 = new Square(500,400,50,50, 'red', this.audioManager, "drag");
+    this.drag3 = new Square(200,600,50,50, 'red', this.audioManager, "drag");
+
+    this.dragManager.addDraggable(this.drag1.draggable);
+    this.dragManager.addDraggable(this.drag2.draggable);
+    this.dragManager.addDraggable(this.drag3.draggable);
   }
 
   update()
@@ -50,8 +54,9 @@ class Main
   draw()
   {
     this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
-    this.drop.draw(this.ctx);
-    this.drag.draw(this.ctx);
+    this.drag1.draw(this.ctx);
+    this.drag2.draw(this.ctx);
+    this.drag3.draw(this.ctx);
     this.ctx.fill();
   }
 }

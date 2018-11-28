@@ -34,6 +34,11 @@ class Draggable
     }
   }
 
+  setOrigin(x, y){
+    this.origin.x = x;
+    this.origin.y = y;
+  }
+
   onMouseOver(e)
   {
     if(!this.dragging){

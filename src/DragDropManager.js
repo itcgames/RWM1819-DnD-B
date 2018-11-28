@@ -3,38 +3,54 @@
 // creating a drag and drop manager to control draggable and dropzone entities
 // to be worked on after P2
 class DragDropManager{
-    constructor(){
+  constructor(){
+    this.draggables = [];
+    this.dropzones = [];
+    document.addEventListener("mouseup", this.checkDropZones.bind(this), true); // fires on a mouse up detection
+  }
 
-    }
+  addDraggable(draggable){
+   this.draggables.push(draggable);
+  }
 
-    checkDropZones(){
-    // old code will abstract dropzone detection to a drag and drop manager
-    /*
-    if(this.dropzones == undefined){
-    
+  addDropzone(dropzone){
+   this.dropzones.push(dropzone);
+  }
+
+  checkDropZones(){
+    if((this.dropzones == undefined || this.dropzones.length <= 0) 
+    && (this.draggables == undefined || this.draggables.length <=0)){
+      // do nothing
     } else {
-      for(var i = 0; i < this.dropzones.length; i++){
-        if(utilities.boundingBoxCollision(this.entity.getCollider(), this.dropzones[i].getCollider())){
-          var dropzone = this.dropzones[i].getCollider();
-          this.entity.x = dropzone.x + ((dropzone.width - this.entity.width) / 2);
-          this.entity.y = dropzone.y + ((dropzone.height - this.entity.height) / 2);
-
-          this.dropzones[i].draggable.validDrop(true);
-
-          if(this.entity.soundManager !== undefined){
-            this.entity.soundManager.playSound("confirm", false);
-          }
-        } else {
-          this.entity.x = this.origin.x;
-          this.entity.y = this.origin.y;
-
-          this.dropzones[i].draggable.validDrop(false);
+      for(var j = 0; j < this.dropzones.length; j++){ // first iterate through all the draggables
+        for(var i = 0; i < this.draggables.length; i++){ // check each against all available dropzones
+          if(utilities.boundingBoxCollision(this.draggables[i].entity.getBoundingBox(), this.dropzones[j].entity.getBoundingBox())){ // if they are colliding
+            var dropzone = this.dropzones[j].entity.getBoundingBox(); // get the bounds of the dropzone
+            var draggable = this.draggables[i].entity.getBoundingBox();
+            var x,y;
+            x = dropzone.x + ((dropzone.width - draggable.width) / 2); 
+            y = dropzone.y + ((dropzone.height - draggable.height) / 2);
+            this.draggables[i].entity.updatePosition(x,y); // call the entitys update position method
+             // place the draggable in the centre of the dropzone
+            this.dropzones[j].validDrop(true); // confirmation affordance
           
-          if(this.entity.soundManager !== undefined){
-            this.entity.soundManager.playSound("error", false);
+            if(this.draggables[i].entity.soundManager !== undefined){
+              this.draggables[i].entity.soundManager.playSound("confirm", false);
+            }
+          } else {
+           var x,y;
+           x = this.draggables[i].origin.x;
+           y = this.draggables[i].origin.y;
+           this.draggables[i].entity.updatePosition(x,y);
+           this.dropzones[j].validDrop(false); // invalid affordance
+
+           if(this.draggables[i].entity.soundManager !== undefined){
+            this.draggables[i].entity.soundManager.playSound("error", false);
+           }
           }
         }
       }
-    }*/
     }
+  }
 }
+  
