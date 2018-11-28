@@ -2,19 +2,18 @@
 
 var that = {};
 /**
- * draggable entity
+ * draggable entity, currentl represented as a square object
  */
 class Draggable
 {
-  // constructor - takes in a reference to an entity to allow for flexibility
-  // colliders are created by the entities that the user passes
-  // collision checks between draggable entities are performed within the drag component however
+  // TODO: pass co-ords by reference so functions can control an object rather than having to render the object speratly
+  // taking in sizing parameters as well as a dropzone entity to check that it's placement is valid
   constructor(entity)
   {
     that = this;
     this.dropzones = {};
     this.entity = entity;  // reference to the entity
-    this.origin = {x: entity.x, y: entity.y};
+    this.origin = {x: entity.getCollider().x, y: entity.getCollider().y};
     this.dragging = false;
 
     this.inflight = {}; // used to get rid of object "jumping" to mouse co-ords
@@ -24,13 +23,11 @@ class Draggable
     document.addEventListener("mousemove", this.mouseOverHandler, true);
   }
 
-  // add to the list of dropzones - this is passed as a list of ENTITIES currently and not dropzone objects that can be below this class
   addDropZones(dropzone)
   {
     this.dropzones = dropzone;
   }
 
-  // Hover over affordance - check to see if the mouse goes within the collider of the entity, if so call the entities Hover over function
   onMouseOver(e)
   {
     if(!this.dragging){
@@ -45,7 +42,6 @@ class Draggable
   }
 
   // detect a mouse button press event and check to see if it is within the points of the entity
-  // if it is add a seperate mousemove event to the draggable which updates the entity in flight
   onMouseDown(e)
   {
     e.preventDefault();
@@ -58,8 +54,8 @@ class Draggable
       document.addEventListener("mousemove", this.mouseMoveHandler, true);
       document.addEventListener("mouseup", this.mouseUpHandler, true);
       
-      this.inflight.x = e.clientX - this.entity.x;
-      this.inflight.y = e.clientY - this.entity.y; 
+      this.inflight.x = e.clientX - this.entity.getCollider().x;
+      this.inflight.y = e.clientY - this.entity.getCollider().y; 
       
       if(this.entity.soundManager != undefined) { 
        this.entity.soundManager.playSound("pickup", false);
@@ -70,12 +66,10 @@ class Draggable
   // update the entity's location each mouse move
   onMouseMove(e){
     e.preventDefault();
-    this.entity.x = e.clientX - this.inflight.x;
-    this.entity.y = e.clientY - this.inflight.y;
+    this.entity.updatePosition(e.clientX - this.inflight.x, e.clientY - this.inflight.y);
   }
 
   // when the mouse button is released perform checks to ensure placement is valid and then remove the listeners
-  // iterate through the list of dropzones if draggable has any stored, if not just drop the draggable where it is
   onMouseUp(e){
     e.preventDefault();
     this.dragging = false;
@@ -94,8 +88,7 @@ class Draggable
             this.entity.soundManager.playSound("confirm", false);
           }
         } else {
-          this.entity.x = this.origin.x;
-          this.entity.y = this.origin.y;
+          this.entity.updatePosition(this.origin.x, this.origin.y);
 
           this.dropzones[i].draggable.validDrop(false);
           
@@ -112,7 +105,7 @@ class Draggable
 }
 
 /**
- * basic entity to represent a dropzone acts as a reference
+ * basic entity to represent a dropzone
  */
 class DropZone {
   constructor(object) {
