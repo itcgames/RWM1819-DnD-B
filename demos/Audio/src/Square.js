@@ -12,28 +12,14 @@ class Square{
         {
             case "drag":
             this.draggable = new Draggable(this);
-            this.hoverOn = 'blue';
-            this.hoverOff = colour;
             break;
             case "drop":
             this.draggable = new DropZone(this);
-            this.hoverOn = 'green';
-            this.hoverOff = colour;
             break;
             default:
             this.draggable = {};
             break;
         }
-    }
-
-    hoverStart()
-    {
-        this.colour = this.hoverOn;
-    }
-
-    hoverEnd()
-    {
-        this.colour = this.hoverOff;
     }
 
     getCollider()

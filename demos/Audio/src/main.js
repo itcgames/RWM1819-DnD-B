@@ -35,17 +35,14 @@ class Main
     }
 
     this.drag = new Square(200,400,50,50, 'red', this.audioManager, "drag");
-    this.drop = new Square(400,500,75,75, 'green', this.audioManager, "drag");
+    this.drop = new Square(400,500,75,75, 'green', this.audioManager, "drop");
 
-    this.drag.draggable.setAxisLock("horizontal", {minX: 200, minY: 400, maxX: 300, maxY: 400});
-    this.drop.draggable.setAxisLock("vertical", {minX: 400, minY: 300, maxX: 400, maxY: 600});
-
-/*     var array = [];
+    var array = [];
     array.push(this.drop);
     if(this.drag.draggable != undefined){
       this.drag.draggable.addDropZones(array);
     }
- */
+
   }
 
   update()

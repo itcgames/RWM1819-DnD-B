@@ -1,29 +1,26 @@
 class Square{
-    constructor(x, y, width, height, colour, sounds, createZones){
+    constructor(x, y, width, height, colour, createZones){
         this.draggable = {};
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.soundManager = sounds;
-        this.colour = colour;
 
         switch(createZones)
         {
             case "drag":
             this.draggable = new Draggable(this);
-            this.hoverOn = 'blue';
-            this.hoverOff = colour;
             break;
             case "drop":
             this.draggable = new DropZone(this);
-            this.hoverOn = 'green';
-            this.hoverOff = colour;
             break;
             default:
             this.draggable = {};
             break;
         }
+
+        this.hoverOn = 'blue';
+        this.hoverOff = colour;
     }
 
     hoverStart()

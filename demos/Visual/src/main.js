@@ -21,31 +21,15 @@ class Main
     this.ctx = this.canvas.getContext("2d");
     document.body.appendChild(this.canvas);
 
-    this.audioManager = new SoundManager();
-    this.audioManager.initialize();
+    this.drag = new Square(200,400,50,50, 'red', "drag");
+    this.drop = new Square(400,500,75,75, 'green', "drop");
 
-    var sounds = {
-      'pickup': 'resources/sound/pickup.wav', 
-      'error' : 'resources/sound/error.wav',
-      'confirm':'resources/sound/confirmation.wav'};
-
-    for(name in sounds)
-    {
-        this.audioManager.loadSound(name, sounds[name]);
-    }
-
-    this.drag = new Square(200,400,50,50, 'red', this.audioManager, "drag");
-    this.drop = new Square(400,500,75,75, 'green', this.audioManager, "drag");
-
-    this.drag.draggable.setAxisLock("horizontal", {minX: 200, minY: 400, maxX: 300, maxY: 400});
-    this.drop.draggable.setAxisLock("vertical", {minX: 400, minY: 300, maxX: 400, maxY: 600});
-
-/*     var array = [];
+    var array = [];
     array.push(this.drop);
     if(this.drag.draggable != undefined){
       this.drag.draggable.addDropZones(array);
     }
- */
+
   }
 
   update()
