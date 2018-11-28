@@ -36,7 +36,7 @@ class Square{
         this.colour = this.hoverOff;
     }
 
-    getCollider()
+    getBoundingBox()
     {
         return {x: this.x, y: this.y, width: this.width, height:this.height};
     }

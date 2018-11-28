@@ -12,7 +12,7 @@ class Draggable
     that = this;
     this.range = {};
     this.entity = entity;  // reference to the entity
-    this.origin = {x: entity.getCollider().x, y: entity.getCollider().y};
+    this.origin = {x: entity.getBoundingBox().x, y: entity.getBoundingBox().y};
 
     this.dragging = false;
     this.axisLock = false;
@@ -37,7 +37,7 @@ class Draggable
   onMouseOver(e)
   {
     if(!this.dragging){
-      if(utilities.pointBoxCollision(this.entity.getCollider(), {x: e.clientX, y: e.clientY})){
+      if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.clientX, y: e.clientY})){
         //document.body.style.cursor = "none";
         this.entity.hoverStart();
       } else {
@@ -55,13 +55,13 @@ class Draggable
     this.mouseMoveHandler = this.onMouseMove.bind(this);
     this.mouseUpHandler = this.onMouseUp.bind(this);
     
-    if(utilities.pointBoxCollision(this.entity.getCollider(), {x: e.clientX, y: e.clientY})){
+    if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.clientX, y: e.clientY})){
       this.dragging = true;
       document.addEventListener("mousemove", this.mouseMoveHandler, true);
       document.addEventListener("mouseup", this.mouseUpHandler, true);
       
-      this.inflight.x = e.clientX - this.entity.getCollider().x;
-      this.inflight.y = e.clientY - this.entity.getCollider().y; 
+      this.inflight.x = e.clientX - this.entity.getBoundingBox().x;
+      this.inflight.y = e.clientY - this.entity.getBoundingBox().y; 
       
       if(this.entity.soundManager != undefined) { 
        this.entity.soundManager.playSound("pickup", false);
@@ -74,14 +74,14 @@ class Draggable
     e.preventDefault();
     if(this.axisLock){
       if(this.axis === "horizontal"){
-        this.entity.updatePosition(e.clientX - this.inflight.x, this.entity.getCollider().y);
+        this.entity.updatePosition(e.clientX - this.inflight.x, this.entity.getBoundingBox().y);
       } else if (this.axis === "vertical"){
-        this.entity.updatePosition(this.entity.getCollider().x, e.clientY - this.inflight.y);
+        this.entity.updatePosition(this.entity.getBoundingBox().x, e.clientY - this.inflight.y);
       }
 
       if(this.range != undefined)
       {
-        var collider = this.entity.getCollider();
+        var collider = this.entity.getBoundingBox();
         var x = collider.x;
         var y = collider.y;
 
