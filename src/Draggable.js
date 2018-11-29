@@ -10,15 +10,17 @@ class Draggable
   constructor(entity)
   {
     that = this;
-    this.range = {};
     this.entity = entity;  // reference to the entity
     this.origin = {x: entity.getBoundingBox().x, y: entity.getBoundingBox().y};
+    this.range = {};
     this.ctx = {};
+    this.inflight = {}; // used to get rid of object "jumping" to mouse co-ords
+    this.offSet = {};
+
     this.dragging = false;
     this.axisLock = false;
     this.axis = "";
 
-    this.inflight = {}; // used to get rid of object "jumping" to mouse co-ords
     
     document.addEventListener("mousedown",this.onMouseDown.bind(this), true);
     this.mouseOverHandler = this.onMouseOver.bind(this);
@@ -32,6 +34,10 @@ class Draggable
     if(range != undefined){
     this.range = {minX: range.minX, minY: range.minY, maxX: range.maxX, maxY: range.maxY};
     }
+  }
+
+  setOffset(offSet){
+    this.offSet = offset;
   }
 
   addCanvas(ctx){
@@ -72,6 +78,11 @@ class Draggable
       this.inflight.x = e.pageX - this.entity.getBoundingBox().x;
       this.inflight.y = e.pageY - this.entity.getBoundingBox().y; 
       
+      if(this.offSet != undefined){
+        this.inflight.x += this.offSet.x;
+        this.inflight.y += this.offSet.y;
+      }
+
       if(this.entity.soundManager != undefined) { 
        this.entity.soundManager.playSound("pickup", false);
       }
@@ -82,8 +93,8 @@ class Draggable
   onMouseMove(e){
     e.preventDefault();
     if(this.axisLock){
-      var x = e.pageX - this.inflight.x;
-      var y = e.pageY - this.inflight.y;
+      var x = e.pageX += this.offSet.x - this.inflight.x;
+      var y = e.pageY +=  - this.inflight.y;
 
       if(this.range != undefined)
       {
