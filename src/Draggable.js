@@ -36,7 +36,7 @@ class Draggable
     }
   }
 
-  setOffset(offSet){
+  setOffSet(offSet){
     this.offSet = offset;
   }
 
