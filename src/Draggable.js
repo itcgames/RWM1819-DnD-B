@@ -52,11 +52,9 @@ class Draggable
   onMouseOver(e)
   {
     if(!this.dragging){
-      if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.pageX, y: e.pageY})){
-        //document.body.style.cursor = "none";
+      if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.pageX + this.offSet.x, y: e.pageY + this.offSet.y})){
         this.entity.hoverStart();
       } else {
-        //document.body.style.cursor = "default";
         this.entity.hoverEnd();
       }
     }
@@ -70,7 +68,8 @@ class Draggable
     this.mouseMoveHandler = this.onMouseMove.bind(this);
     this.mouseUpHandler = this.onMouseUp.bind(this);
 
-    if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.pageX, y: e.pageY})){
+    if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.pageX + this.offSet.x, y: e.pageY + this.offSet.y})){
+      console.lo
       this.dragging = true;
       document.addEventListener("mousemove", this.mouseMoveHandler, true);
       document.addEventListener("mouseup", this.mouseUpHandler, true);
@@ -93,8 +92,8 @@ class Draggable
   onMouseMove(e){
     e.preventDefault();
     if(this.axisLock){
-      var x = e.pageX += this.offSet.x - this.inflight.x;
-      var y = e.pageY +=  - this.inflight.y;
+      var x = e.pageX + this.offSet.x - this.inflight.x;
+      var y = e.pageY + this.offSet.y - this.inflight.y;
 
       if(this.range != undefined)
       {
