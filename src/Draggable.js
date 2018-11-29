@@ -37,7 +37,7 @@ class Draggable
   }
 
   setOffSet(offSet){
-    this.offSet = offset;
+    this.offSet = offSet;
   }
 
   addCanvas(ctx){
