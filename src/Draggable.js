@@ -46,7 +46,7 @@ class Draggable
   onMouseOver(e)
   {
     if(!this.dragging){
-      if(utilities.pointBoxCollision(this.entity.getBoundingBox(), this.getMousePos(this.ctx, e))){
+      if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.pageX, y: e.pageY})){
         //document.body.style.cursor = "none";
         this.entity.hoverStart();
       } else {
@@ -56,14 +56,6 @@ class Draggable
     }
   }
 
-  getMousePos(ctx,e){
-    var rect = ctx.getBoundingClientRect();
-    return {
-        x: (e.clientX - rect.left) / (rect.right - rect.left) * ctx.width,
-        y: (e.clientY - rect.top) / (rect.bottom - rect.top) * ctx.height
-    };
-  }
-
   // detect a mouse button press event and check to see if it is within the points of the entity
   onMouseDown(e)
   {
@@ -71,15 +63,14 @@ class Draggable
 
     this.mouseMoveHandler = this.onMouseMove.bind(this);
     this.mouseUpHandler = this.onMouseUp.bind(this);
-    var rect = gameNs.game.ctx.getBoundingClientRect();
 
-    if(utilities.pointBoxCollision(this.entity.getBoundingBox(), this.getMousePos(this.ctx, e))){
+    if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.pageX, y: e.pageY})){
       this.dragging = true;
       document.addEventListener("mousemove", this.mouseMoveHandler, true);
       document.addEventListener("mouseup", this.mouseUpHandler, true);
       
-      this.inflight.x = this.getMousePos(this.ctx, e).x - this.entity.getBoundingBox().x;
-      this.inflight.y = e.clientY - this.entity.getBoundingBox().y; 
+      this.inflight.x = e.pageX - this.entity.getBoundingBox().x;
+      this.inflight.y = e.pageY - this.entity.getBoundingBox().y; 
       
       if(this.entity.soundManager != undefined) { 
        this.entity.soundManager.playSound("pickup", false);
@@ -91,8 +82,8 @@ class Draggable
   onMouseMove(e){
     e.preventDefault();
     if(this.axisLock){
-      var x = e.clientX - this.inflight.x;
-      var y = e.clientY - this.inflight.y;
+      var x = e.pageX - this.inflight.x;
+      var y = e.pageY - this.inflight.y;
 
       if(this.range != undefined)
       {
@@ -117,7 +108,7 @@ class Draggable
       }
     }
     else{
-      this.entity.updatePosition(e.clientX - this.inflight.x, e.clientY - this.inflight.y);
+      this.entity.updatePosition(e.pageX - this.inflight.x, e.pageY - this.inflight.y);
     }
   }
 
