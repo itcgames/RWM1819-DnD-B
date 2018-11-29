@@ -13,7 +13,7 @@ class Draggable
     this.range = {};
     this.entity = entity;  // reference to the entity
     this.origin = {x: entity.getBoundingBox().x, y: entity.getBoundingBox().y};
-
+    this.ctx = {};
     this.dragging = false;
     this.axisLock = false;
     this.axis = "";
@@ -34,6 +34,10 @@ class Draggable
     }
   }
 
+  addCanvas(ctx){
+    this.ctx = ctx;
+  }
+
   setOrigin(x, y){
     this.origin.x = x;
     this.origin.y = y;
@@ -42,7 +46,7 @@ class Draggable
   onMouseOver(e)
   {
     if(!this.dragging){
-      if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.clientX, y: e.clientY})){
+      if(utilities.pointBoxCollision(this.entity.getBoundingBox(), this.getMousePos(this.ctx, e))){
         //document.body.style.cursor = "none";
         this.entity.hoverStart();
       } else {
@@ -52,6 +56,14 @@ class Draggable
     }
   }
 
+  getMousePos(ctx,e){
+    var rect = ctx.getBoundingClientRect();
+    return {
+        x: (e.clientX - rect.left) / (rect.right - rect.left) * ctx.width,
+        y: (e.clientY - rect.top) / (rect.bottom - rect.top) * ctx.height
+    };
+  }
+
   // detect a mouse button press event and check to see if it is within the points of the entity
   onMouseDown(e)
   {
@@ -59,13 +71,14 @@ class Draggable
 
     this.mouseMoveHandler = this.onMouseMove.bind(this);
     this.mouseUpHandler = this.onMouseUp.bind(this);
-    
-    if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.clientX, y: e.clientY})){
+    var rect = gameNs.game.ctx.getBoundingClientRect();
+
+    if(utilities.pointBoxCollision(this.entity.getBoundingBox(), this.getMousePos(this.ctx, e))){
       this.dragging = true;
       document.addEventListener("mousemove", this.mouseMoveHandler, true);
       document.addEventListener("mouseup", this.mouseUpHandler, true);
       
-      this.inflight.x = e.clientX - this.entity.getBoundingBox().x;
+      this.inflight.x = this.getMousePos(this.ctx, e).x - this.entity.getBoundingBox().x;
       this.inflight.y = e.clientY - this.entity.getBoundingBox().y; 
       
       if(this.entity.soundManager != undefined) { 
