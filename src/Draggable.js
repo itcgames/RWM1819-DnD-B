@@ -78,31 +78,29 @@ class Draggable
   onMouseMove(e){
     e.preventDefault();
     if(this.axisLock){
-      if(this.axis === "horizontal"){
-        this.entity.updatePosition(e.clientX - this.inflight.x, this.entity.getBoundingBox().y);
-      } else if (this.axis === "vertical"){
-        this.entity.updatePosition(this.entity.getBoundingBox().x, e.clientY - this.inflight.y);
-      }
+      var x = e.clientX - this.inflight.x;
+      var y = e.clientY - this.inflight.y;
 
       if(this.range != undefined)
       {
-        var collider = this.entity.getBoundingBox();
-        var x = collider.x;
-        var y = collider.y;
-
-        if(collider.x < this.range.minX){
+        if(x < this.range.minX){
           x = this.range.minX;
         }
-        if(collider.y < this.range.minY){
+        if(y < this.range.minY){
           y = this.range.minY;
         }
-        if(collider.x > this.range.maxX){
+        if(x > this.range.maxX){
           x = this.range.maxX;
         }
-        if(collider.y > this.range.maxY){
+        if(y > this.range.maxY){
           y = this.range.maxY;
         }
-        this.entity.updatePosition(x, y);
+      }
+
+      if(this.axis === "horizontal"){
+        this.entity.updatePosition(x, this.entity.getBoundingBox().y);
+      } else if (this.axis === "vertical"){
+        this.entity.updatePosition(this.entity.getBoundingBox().x, y);
       }
     }
     else{
