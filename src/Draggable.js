@@ -69,7 +69,6 @@ class Draggable
     this.mouseUpHandler = this.onMouseUp.bind(this);
 
     if(utilities.pointBoxCollision(this.entity.getBoundingBox(), {x: e.pageX + this.offSet.x, y: e.pageY + this.offSet.y})){
-      console.lo
       this.dragging = true;
       document.addEventListener("mousemove", this.mouseMoveHandler, true);
       document.addEventListener("mouseup", this.mouseUpHandler, true);
