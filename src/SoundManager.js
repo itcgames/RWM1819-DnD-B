@@ -83,7 +83,7 @@ class SoundManager
 
         /**this.source.connect(this.gainNode);
         this.gainNode.connect(this.audioContext.destination); */
-        console.log("Sound " + sound + " playing.");
+        //console.log("Sound " + sound + " playing.");
 
         this.source.buffer = audio; // tell the source which sound to play
         this.source.loop = loop;
