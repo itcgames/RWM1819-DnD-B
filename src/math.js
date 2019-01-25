@@ -17,7 +17,7 @@ var utilities = {
     boundingBoxCollision: function(box_a, box_b){
         if(box_a.x < box_b.x + box_b.width &&
             box_a.x + box_a.width > box_b.x &&
-            box_a.y < box_a.y + box_b.height &&
+            box_a.y < box_b.y + box_b.height &&
             box_a.height + box_a.y > box_b.y){
                 return true;
             } else {
