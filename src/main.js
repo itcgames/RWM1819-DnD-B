@@ -37,10 +37,23 @@ class Main
     this.dragManager = new DragDropManager();
 
     this.drag1 = new Square(200,400,50,50, 'red', this.audioManager, "drag");
+    this.drag1.makeDraggable("red", "green");
     this.drag2 = new Square(500,400,50,50, 'red', this.audioManager, "drag");
+    this.drag2.makeDraggable("red", "green");
+    this.drag3 = new Square(200,600,50,50, 'red', this.audioManager, "drag");
+    this.drag3.makeDraggable("red", "green");
 
-    this.drag1.draggable.setAxisLock("horizontal", {minX: 200, minY: 400, maxX: 400, maxY: 400});
-    this.drag2.draggable.setAxisLock("vertical", {minX: 500, minY: 400, maxX: 500, maxY: 800});
+    this.drop1 = new Square(200,300,75,75, 'blue', this.audioManager);
+    this.drop1.makeDropZone("cyan", "blue", 1);
+    this.drop2 = new Square(500,300,75,75, 'blue', this.audioManager);
+    this.drop2.makeDropZone('cyan', 'blue', 1);
+
+    this.dragManager.addDraggable(this.drag1.draggable);
+    this.dragManager.addDraggable(this.drag2.draggable);
+    this.dragManager.addDraggable(this.drag3.draggable);
+
+    this.dragManager.addDropzone(this.drop1.draggable);
+    this.dragManager.addDropzone(this.drop2.draggable);
   }
 
   update()
@@ -52,8 +65,12 @@ class Main
   draw()
   {
     this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
+    this.drop1.draw(this.ctx);
+    this.drop2.draw(this.ctx);
+
     this.drag1.draw(this.ctx);
     this.drag2.draw(this.ctx);
+    this.drag3.draw(this.ctx);
     this.ctx.fill();
   }
 }
